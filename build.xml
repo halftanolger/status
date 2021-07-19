@@ -1,0 +1,161 @@
+
+<!--	ANT -byggefil for StatusApp -->
+<!--	Skriv 'ant hjelp' ..and take it from there. -->
+ 
+
+<project 
+	name="StatusApp" 
+	basedir="." 
+ 	default="main">
+
+	<property 
+		name="src.dir" 
+	      	value="src"/>
+    	<property 
+		name="build.dir" 
+	      	value="build"/>
+    	<property 
+		name="classes.dir"
+	      	value="${build.dir}/classes"/>
+    	<property 
+		name="jar.dir"
+	      	value="${build.dir}/jar"/>
+    	<property 
+		name="lib.dir"
+	      	value="lib"/>
+    	<property 
+		name="main-class"
+	      	value="status.StatusApp"/>
+    	<property 
+		name="report.dir"  
+	      	value="${build.dir}/junitreport"/>
+
+    	<path 
+		id="classpath">
+		<fileset 
+			dir="${lib.dir}" 
+		     	includes="**/*.jar"/>
+   	</path>
+
+       <!-- Clean -->	
+	<target 
+		name="clean">
+        	<delete 
+			dir="${build.dir}"/>
+    	</target>
+
+       <!-- Compile -->
+    	<target 
+		name="compile">
+		<mkdir 
+			dir="${classes.dir}"/>
+		<javac 
+			srcdir="${src.dir}" 
+	       		destdir="${classes.dir}" 
+	       		includeantruntime="false" 
+	       		classpathref="classpath"/>
+		<copy 
+			todir="${classes.dir}">
+			<fileset 
+				dir="${src.dir}" 
+			 	excludes="**/*.java"/>
+        	</copy>
+    	</target>
+
+	<!-- Make the Jar -file -->
+    	<target 
+		name="jar" 
+		depends="compile">
+        	<mkdir 
+			dir="${jar.dir}"/>
+		<jar 
+			destfile="${jar.dir}/${ant.project.name}.jar" 
+	     		basedir="${classes.dir}">
+            		<manifest>
+				<attribute 
+					name="Main-Class" 
+			       		value="${main-class}"/>
+            		</manifest>
+        	</jar>
+    	</target>
+
+	<path 
+		id="application" 
+	  	location="${jar.dir}/${ant.project.name}.jar"/>
+
+	<!-- Run -->
+	<target 
+		name="run" 
+	    	depends="jar">
+	    	<java 
+			fork="true" 
+		  	classname="${main-class}">
+	      		<classpath> 
+				<path 
+					refid="classpath"/>
+				<path 
+					refid="application"/>
+				<path 
+					location="${jar.dir}/${ant.project.name}.jar"/>
+	      		</classpath>
+	   	</java> 	
+    	</target>
+
+	<!-- JUnit -->		
+	<target 
+		name="junit" 
+		depends="jar">
+        	<mkdir 
+			dir="${report.dir}"/>	    
+		<junit 
+			printsummary="yes">
+            		<classpath>
+				<path 
+					refid="classpath"/>
+				<path 
+					refid="application"/>
+            		</classpath>
+            		<formatter 
+				type="xml"/>
+	    		<batchtest 
+				fork="yes" 
+				todir="${report.dir}">
+                		<fileset 
+					dir="${src.dir}" 
+					includes="**/*Test.java"/>
+            		</batchtest>
+        	</junit>
+    	</target>
+
+	<!-- JUnit Report -->
+	<target 
+		name="junitreport">
+		<junitreport 
+			todir="${report.dir}">
+			<fileset 
+				dir="${report.dir}" 
+				includes="TEST-*.xml"/>
+            		<report 
+				todir="${report.dir}"/>
+        	</junitreport>
+    	</target>	    
+
+ 	<!-- Clean -->		
+    	<target 
+		name="clean-build" 
+	    	depends="clean,jar"/>
+		
+        <!-- Main -->
+    	<target 
+		name="main" 
+	    	depends="clean,run"/>
+
+	<!-- Hjelp -->
+	<target
+		name="hjelp">
+		<echo message = "ANT -byggeskript for StatusApp"/>
+	</target>
+
+    
+
+</project>
