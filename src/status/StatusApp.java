@@ -83,7 +83,6 @@ public class StatusApp extends JFrame {
 
 		mainPanel = new javax.swing.JPanel();
         	mainPanel.setLayout(new java.awt.BorderLayout());
-        	mainPanel.setBorder(new javax.swing.border.EmptyBorder(new java.awt.Insets(12, 12, 12, 12)));
  
                 statusComponent = new StatusComponent();
 		mainPanel.add(statusComponent, BorderLayout.CENTER);

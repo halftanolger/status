@@ -1,28 +1,64 @@
 
 package status;
 
+import org.apache.log4j.Logger;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.util.ArrayList;
 import javax.swing.JPanel;
 
 public class StatusComponent extends JPanel {
 
 
+	static Logger logger = Logger.getLogger(status.StatusComponent.class);
+
+
+	private class ComputerData {
+
+		double ax,ay;
+		double bx,by;
+
+		public ComputerData(double ax, double ay, double bx, double by) {
+			this.ax = ax;
+			this.ay = ay;
+			this.bx = bx;
+			this.by = by;
+		}
+
+		public double getAx(){ return ax; }
+	        public double getAy(){ return ay; }
+	        public double getBx(){ return bx; }
+	        public double getBy(){ return by; }
+
+	}
+
 	private class StatusComponentData {
 
+		String rom = "";
 		double width  = 0;
 		double height = 0;
 
+		ArrayList<ComputerData> computers = new ArrayList<ComputerData>();
 
 		public StatusComponentData() {
+
+			rom = "Testrom";
 			width = 30.0;
 			height = 20.0;
+
+			
+			computers.add( new ComputerData(3,6,2,3));
+			computers.add( new ComputerData(3,10,2,3));
 		}	
 
 
+		String getRom() { return rom; }
 		double getWidth() { return width; }
 		double getHeight() { return height; }
+
+		ArrayList<ComputerData> getComputers() { return computers; }
 
 	}
 
@@ -40,48 +76,73 @@ public class StatusComponent extends JPanel {
         	super.paintComponent(g);
 
 		Dimension dim = getSize();
-		double height = dim.getHeight() - 1.0;
-		double width = dim.getWidth() - 1.0;
+		double by = dim.getHeight();
+		double bx = dim.getWidth();
+
+ 	        //g.setColor(Color.red);
+        	//g.drawRect(0, 0, (int)(bx), (int)(by));
 
 
-		double sHeight = data.getHeight();
-		double sWidth = data.getWidth();
+		double ay = data.getHeight();
+		double ax = data.getWidth();
 
-		double dH = height - sHeight;
-		double dW = width - sWidth;
+                //g.setColor(Color.blue);
+        	//g.drawRect(0, 0, (int)(ax), (int)(ay));
 
-		double drawFactor = 1.0;
+		double scale = 1.0;
+                int doScaleStuff = doScale(ax,bx,ay,by);
+		if (doScaleStuff == 1) {
 
-		double scale;
-		if (dH <= dW) {
-			scale = width / sWidth;
-		} else {
-			scale = height / sHeight;
+			logger.debug("do scale");
+			scale = getScale(ax,bx,ay,by);
 		}
+		
+		ax *= scale;
+		ay *= scale;
+
+		g.setColor(Color.black);
+        	g.drawRect(0, 0, (int)(ax-1.0), (int)(ay-1.0));
+		g.drawString(data.getRom(),10,15);
 
 
+		ArrayList<ComputerData> list = data.getComputers();
+		for (ComputerData c:list) {
 
-		double drawHeight = sHeight * scale;
-		double drawWidth = sWidth * scale;
+			double ai = (c.getAx() * scale);
+			double bi = (c.getAy() * scale);
+			double ci = (c.getBx() * scale);
+			double di = (c.getBy() * scale);
 
-        	g.setColor(Color.black);
-        	g.drawRect(0, 0, ((int)drawWidth)-35, (int)drawHeight);
+              		g.drawRect((int)ai, (int)bi, (int)(ci-1.0), (int)(di-1.0));
 
-         	String info2 = "width="+width+" height="+height;
-		g.drawString(info2, 20, 40);
-
-                String info3 = "sWidth="+sWidth+" sHeight="+sHeight;
-		g.drawString(info3, 20, 60);
-                
-		String info = "dH="+dH+" dW="+dW+" scale="+scale;
-		g.drawString(info, 20, 80);
-
-
+		}
 
     	}
 
 
-	
+        private int doScale(double ax, double bx, double ay, double by) {
+
+		if ( (bx - ax) > 0 && (by - ay) > 0) {
+			return 1;
+		} else {
+			return 0;
+		}
+		
+	}	
+
+	private double getScale(double ax, double bx, double ay, double by) {
+
+		double dx = bx / ax;
+		double dy = by / ay;
+
+                if (dx > dy) {
+			return dy;
+		} else {
+			return dx;
+		}
+
+	}
+
 
 
 }
