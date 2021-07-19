@@ -1,7 +1,5 @@
 
 <!--	ANT -byggefil for StatusApp -->
-<!--	Skriv 'ant hjelp' ..and take it from there. -->
- 
 
 <project 
 	name="StatusApp" 
