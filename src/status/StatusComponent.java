@@ -1,8 +1,6 @@
-
 package status;
 
 import org.apache.log4j.Logger;
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -11,26 +9,59 @@ import javax.swing.JPanel;
 
 public class StatusComponent extends JPanel {
 
-
 	static Logger logger = Logger.getLogger(status.StatusComponent.class);
-
 
 	private class ComputerData {
 
+		String navn;
+		String info;
+		int status;
 		double ax,ay;
 		double bx,by;
 
-		public ComputerData(double ax, double ay, double bx, double by) {
+		public ComputerData(double ax, 
+					double ay, 
+					double bx, 
+					double by,
+					int status,
+					String navn,
+					String info) {
 			this.ax = ax;
 			this.ay = ay;
 			this.bx = bx;
 			this.by = by;
+			this.status = status;
+			this.navn = navn;
+			this.info = info;
 		}
 
-		public double getAx(){ return ax; }
-	        public double getAy(){ return ay; }
-	        public double getBx(){ return bx; }
-	        public double getBy(){ return by; }
+		public String getNavn() {
+			return navn;
+		}
+
+		public String getInfo() {
+			return info;
+		}
+
+		public int getStatus() {
+			return status;
+		}
+
+		public double getAx() { 
+			return ax; 
+		}
+
+	        public double getAy() { 
+			return ay; 
+		}
+
+	        public double getBx() { 
+			return bx; 
+		}
+
+	        public double getBy() { 
+			return by; 
+		}
 
 	}
 
@@ -48,17 +79,45 @@ public class StatusComponent extends JPanel {
 			width = 30.0;
 			height = 20.0;
 
+			// TODO:
+			// Selve størrelse på hovedviduet bør
+			// maksimaliseres ut fra denne bredden
+			// og høyden ...
 			
-			computers.add( new ComputerData(3,6,2,3));
-			computers.add( new ComputerData(3,10,2,3));
+			computers.add( new ComputerData(3,
+						6,
+						2,
+						3,
+						0,
+						"SIM01",
+						"30")
+					);
+
+			computers.add( new ComputerData(3,
+						10,
+						2,
+						3,
+						0,
+						"SIM02",
+						"30")
+					);
 		}	
 
+		String getRom() { 
+			return rom; 
+		}
 
-		String getRom() { return rom; }
-		double getWidth() { return width; }
-		double getHeight() { return height; }
+		double getWidth() { 
+			return width; 
+		}
 
-		ArrayList<ComputerData> getComputers() { return computers; }
+		double getHeight() { 
+			return height; 
+		}
+
+		ArrayList<ComputerData> getComputers() { 
+			return computers; 
+		}
 
 	}
 
@@ -113,7 +172,15 @@ public class StatusComponent extends JPanel {
 			double ci = (c.getBx() * scale);
 			double di = (c.getBy() * scale);
 
-              		g.drawRect((int)ai, (int)bi, (int)(ci-1.0), (int)(di-1.0));
+              		g.drawRect((int)ai, 
+					(int)bi, 
+					(int)(ci-1.0), 
+					(int)(di-1.0));
+
+
+           		g.drawString(c.getNavn(),
+					5+(int)ai,
+					15+(int)bi);
 
 		}
 
