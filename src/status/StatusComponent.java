@@ -75,7 +75,7 @@ public class StatusComponent extends JPanel {
 
 		public StatusComponentData() {
 
-			rom = "Testrom";
+			rom = "TEST";
 			width = 30.0;
 			height = 20.0;
 
@@ -88,8 +88,8 @@ public class StatusComponent extends JPanel {
 						6,
 						2,
 						3,
-						0,
-						"SIM01",
+						1,
+						"CPU01",
 						"30")
 					);
 
@@ -98,7 +98,7 @@ public class StatusComponent extends JPanel {
 						2,
 						3,
 						0,
-						"SIM02",
+						"CPU02",
 						"30")
 					);
 		}	
@@ -141,7 +141,6 @@ public class StatusComponent extends JPanel {
  	        //g.setColor(Color.red);
         	//g.drawRect(0, 0, (int)(bx), (int)(by));
 
-
 		double ay = data.getHeight();
 		double ax = data.getWidth();
 
@@ -154,6 +153,7 @@ public class StatusComponent extends JPanel {
 
 			logger.debug("do scale");
 			scale = getScale(ax,bx,ay,by);
+
 		}
 		
 		ax *= scale;
@@ -164,19 +164,28 @@ public class StatusComponent extends JPanel {
 		g.drawString(data.getRom(),10,15);
 
 
-		ArrayList<ComputerData> list = data.getComputers();
-		for (ComputerData c:list) {
+		double fs = 0.4;
+		fs *= scale;
+
+                g.setFont(g.getFont().deriveFont((float)fs));
+
+		for (ComputerData c:data.getComputers()) {
 
 			double ai = (c.getAx() * scale);
 			double bi = (c.getAy() * scale);
 			double ci = (c.getBx() * scale);
 			double di = (c.getBy() * scale);
 
+			if (c.getStatus() == 1) {
+				g.setColor(Color.blue);
+			} else {
+				g.setColor(Color.red);
+			}
+
               		g.drawRect((int)ai, 
 					(int)bi, 
 					(int)(ci-1.0), 
 					(int)(di-1.0));
-
 
            		g.drawString(c.getNavn(),
 					5+(int)ai,
